@@ -45,15 +45,19 @@ const ServiceOrder = ({ navigation }) => {
           <Title>Ordem de Serviço</Title>
           <Column>
             <TextForm>Ordem de Serviço</TextForm>
-            <InputForm placeholder="Ordem de Serviço" keyboardType="numeric" />
+            <Input
+              name="service_order"
+              placeholder="Ordem de Serviço"
+              keyboardType="numeric"
+            />
           </Column>
           <Column>
             <TextForm>Operador</TextForm>
-            <InputForm placeholder="Operador" />
+            <Input placeholder="Operador" name="operator" />
           </Column>
           <Column>
             <TextForm>Capsula</TextForm>
-            <InputForm placeholder="Capsula" />
+            <Input placeholder="Capsula" name="capsule" />
           </Column>
           <Column>
             <TextForm>Valor de Referência</TextForm>

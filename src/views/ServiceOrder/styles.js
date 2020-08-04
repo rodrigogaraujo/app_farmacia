@@ -38,7 +38,6 @@ export const TextForm = styled.Text`
   color: rgb(41, 178, 178);
   flex-basis: 100%;
   font-size: 20px;
-  margin-left: 20px;
 `;
 export const InputFormSelect = styled.View`
   flex-basis: 100%;

@@ -23,8 +23,15 @@ const Report = ({ navigation }) => {
     if (navigation.state.params.values.weights) {
       lineData = [];
       const reference = parseInt(navigation.state.params.values.valueReference);
-      const valueSup = reference / 10;
-      const valueInf = reference - reference / 10;
+      let valueSup = 0;
+      let valueInf = 0;
+      if (reference < 300) {
+        valueSup = reference / 10;
+        valueInf = reference - reference / 10;
+      } else {
+        valueSup = reference / 7.5;
+        valueInf = reference - reference / 7.5;
+      }
       let position = 0;
       navigation.state.params.values.weights.map((weight) => {
         position += 1;
