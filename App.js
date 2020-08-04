@@ -1,6 +1,7 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import SignIn from './src/views/SignIn';
+import SignUp from './src/views/SignUp';
 import Home from './src/views/Home';
 import ServiceOrder from './src/views/ServiceOrder';
 import Weighing from './src/views/Weighing';
@@ -15,6 +16,7 @@ const navigator = createStackNavigator(
     Weighing: Weighing,
     GetWeight: GetWeight,
     Report: Report,
+    SignUp: SignUp,
   },
   {
     initialRouteName: 'SignIn',

@@ -20,6 +20,7 @@ import Header from '../../components/Header';
 const ServiceOrder = ({ navigation }) => {
   const formRef = useRef(null);
   const [farmac, setFarmac] = useState('americ');
+  const [unit, setUnit] = useState('g');
 
   const handleSubmit = useCallback(
     (data) => {
@@ -28,6 +29,7 @@ const ServiceOrder = ({ navigation }) => {
         if (data) {
           newData = { ...data };
           newData.farmac = farmac;
+          newData.unit = unit;
           navigation.navigate('Weighing', { data: newData });
         }
       } else {
@@ -77,6 +79,20 @@ const ServiceOrder = ({ navigation }) => {
               >
                 <Picker.Item label="Americana" value="americ" />
                 <Picker.Item label="Brasileira" value="brasilian" />
+              </Picker>
+            </InputFormSelect>
+          </Column>
+          <Column>
+            <TextForm>Unidade</TextForm>
+            <InputFormSelect>
+              <Picker
+                selectedValue={unit}
+                style={{ height: 50, width: 150 }}
+                onValueChange={(itemValue, itemIndex) => setUnit(itemValue)}
+              >
+                <Picker.Item label="Grama" value="g" />
+                <Picker.Item label="Miligrama" value="mg" />
+                <Picker.Item label="Mililitro" value="ml" />
               </Picker>
             </InputFormSelect>
           </Column>

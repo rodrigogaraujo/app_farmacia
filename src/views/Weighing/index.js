@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { Text, Picker } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { Form } from '@unform/mobile';
+import moment from 'moment';
 
 import {
   Container,
@@ -32,8 +32,8 @@ const Weighing = ({ navigation }) => {
   const [referenceValue, setReferenceValue] = useState(
     navigation.state.params.data.reference_value
   );
+  const [unit, setUnit] = useState(navigation.state.params.data.unit);
   const [lastValue, setLestValue] = useState(0);
-
   useEffect(() => {
     navigation.state.params.data.farmac === 'americ'
       ? setWeightSize(10)
@@ -76,8 +76,6 @@ const Weighing = ({ navigation }) => {
     }
   }, [weightContinue, weights]);
 
-  console.log(weights);
-
   const handlePrev = useCallback(() => {
     if (total > 0) {
       setTotal(total - 1);
@@ -95,10 +93,13 @@ const Weighing = ({ navigation }) => {
         <Title>Pesagem</Title>
         <ContentContainer>
           <TextOs>Ordem de Serviço n 001;</TextOs>
-          <TextOs>Referência 0,057 mg;</TextOs>
           <TextOs>
-            {navigation.state.params.data.farmac === 'americ' ? '10' : '20'}
-            cápsulas; 21.07.2020; 13h09
+            Referência {referenceValue} {unit};
+          </TextOs>
+          <TextOs>
+            {navigation.state.params.data.farmac === 'americ' ? '10 ' : '20 '}
+            cápsulas; {moment(new Date()).format('DD/MM/YYYY')};{' '}
+            {moment(new Date()).format('hh:mm')}
           </TextOs>
         </ContentContainer>
         <Column>
@@ -128,7 +129,7 @@ const Weighing = ({ navigation }) => {
             <AntDesign name="caretleft" size={24} color="white" />
           </ButtonForm>
           <Text style={{ marginLeft: 10, fontSize: 20 }}>Logo</Text>
-          <TextValue>{total}</TextValue>
+          <TextValue>{total <= 9 ? total + 1 : 10}</TextValue>
           <ButtonForm style={{ marginLeft: 20 }} onPress={handleNext}>
             <AntDesign name="caretright" size={24} color="white" />
           </ButtonForm>
@@ -138,6 +139,7 @@ const Weighing = ({ navigation }) => {
           onPress={() => {
             setDisabled(true);
             navigation.navigate('GetWeight', {
+              unit,
               valueReference: referenceValue,
               weights,
               farmac: navigation.state.params.data.farmac,
@@ -145,9 +147,6 @@ const Weighing = ({ navigation }) => {
           }}
         >
           <Text style={{ color: 'white' }}>Gerar Relatório</Text>
-        </ButtonForm>
-        <ButtonForm>
-          <Text style={{ color: 'white' }}>Editar Ordem de Serviço</Text>
         </ButtonForm>
       </Content>
     </Container>

@@ -1,18 +1,18 @@
 import React from 'react';
 
-import { Text } from 'react-native';
-
-import {
-  Container,
-  HeaderProfile,
-  Content,
-  ButtonOption,
-  TextButton,
-} from './styles';
+import { Container, Content, ButtonOption, TextButton } from './styles';
 
 import Header from '../../components/Header';
 
 const Home = ({ navigation }) => {
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('@userMail');
+      navigation.navigate('SignIn');
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
   return (
     <Container>
       <Header />
@@ -23,13 +23,7 @@ const Home = ({ navigation }) => {
         <ButtonOption>
           <TextButton>Banco de dados</TextButton>
         </ButtonOption>
-        <ButtonOption>
-          <TextButton>Perfil</TextButton>
-        </ButtonOption>
-        <ButtonOption>
-          <TextButton>Configurações</TextButton>
-        </ButtonOption>
-        <ButtonOption onPress={() => navigation.navigate('SignIn')}>
+        <ButtonOption onPress={() => handleLogout()}>
           <TextButton>Logout</TextButton>
         </ButtonOption>
       </Content>

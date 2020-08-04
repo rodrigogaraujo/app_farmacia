@@ -34,7 +34,10 @@ export const GetWeight = ({ navigation }) => {
         <InputText value={`${valueTotal}g`} />
         <ButtonNext
           onPress={() =>
-            navigation.navigate('Report', { values: navigation.state.params })
+            navigation.navigate('Report', {
+              values: navigation.state.params,
+              valueTotal,
+            })
           }
         >
           <AntDesign name="caretright" size={24} color="white" />
