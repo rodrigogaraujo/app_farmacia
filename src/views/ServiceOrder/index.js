@@ -36,7 +36,7 @@ const ServiceOrder = ({ navigation }) => {
         alert('Complete os dados');
       }
     },
-    [farmac]
+    [farmac, unit]
   );
 
   return (

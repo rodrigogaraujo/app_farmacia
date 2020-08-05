@@ -112,18 +112,6 @@ const Weighing = ({ navigation }) => {
             keyboardType="numeric"
           />
         </Column>
-        <Column>
-          <TextForm>Peso em:</TextForm>
-          <InputFormSelect>
-            <Picker
-              selectedValue={weight}
-              style={{ height: 50, width: 150 }}
-              onValueChange={(itemValue, itemIndex) => setWeight(itemValue)}
-            >
-              <Picker.Item label="Grama" value="gram" />
-            </Picker>
-          </InputFormSelect>
-        </Column>
         <Row>
           <ButtonForm style={{ marginLeft: 20 }} onPress={handlePrev}>
             <AntDesign name="caretleft" size={24} color="white" />

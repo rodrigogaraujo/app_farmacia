@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Text } from 'react-native';
+import { Text, ActivityIndicator, View } from 'react-native';
 import { Table, Row, Rows } from 'react-native-table-component';
 import moment from 'moment';
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import * as Print from 'expo-print';
 
 import {
   Container,
@@ -31,10 +33,68 @@ const Report = ({ navigation }) => {
   const [media, setMedia] = useState(() => {
     return valueTotal / navigation.state.params.values.weights.length;
   });
+  const [arrWeights, setArrWeights] = useState(
+    navigation.state.params.values.weights
+  );
   const [mediaDpr, setMediaDpr] = useState(0);
   const [mediaDrg, setMediaDrg] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [qtMin, setQtMin] = useState(0);
+  const [qtMax, setQtMax] = useState(0);
+  const [conform, setConform] = useState(true);
+
+  const createPDF = async () => {
+    try {
+      const table = navigation.state.params.values.weights.map((weight) => {
+        const wei = unit === 'g' ? weight / 1000 : weight;
+        const calcNew = 1 - wei / parseInt(referenceData);
+        position += 1;
+        return (
+          <tr>
+            <td>{position}</td>
+            <td>{wei}</td>
+            <td>`${Number(calcNew).toFixed(2) * 100}%`</td>
+          </tr>
+        );
+      });
+      let position = 0;
+      let html = `<h1>ORDEM DE SERVIÇO</h1><br/>
+        <h2>Ordem de Serviço n.: 001</h2>
+        <br/><h2>Manipulador: Farmacêutico</h2><br/>
+        ${moment(new Date()).format('DD/MM/YYYY')};
+        ${moment(new Date()).format('hh:mm')}<br/>
+        <table><tr><th>Cápsula</th><th>Peso</th><th>DPR</th></tr>
+        ${table}
+        </table><br />
+        <p>Referencia: ${referenceData}</p><br />
+        <p>Média: ${Number(media).toFixed(2)}g</p><br />
+        <p>Média DPR: ${Number(
+          mediaDpr / navigation.state.params.values.weights.length
+        ).toFixed(2)}</p><br />
+        <p>Valor máximo: ${bigger}</p><br />
+        <p>Valor mínimo: ${small}</p><br />
+        <p>C.V.: ${Number((mediaDrg * 100) / media).toFixed(2)}%</p>
+        <p>Qtmin: ${qtMin}%</p>
+        <p>Qtmin: ${qtMax}%</p>
+        <p>Valor total: ${valueTotal}mg</p>
+        <p>Conforme: ${
+          conform && Number((mediaDrg * 100) / media).toFixed(2) < 4
+            ? 'SIM'
+            : 'NÃO'
+        }</p>`;
+      // console.log(file.filePath);
+      const pdf = await Print.printToFileAsync({ html });
+
+      return Print.printAsync({ uri: pdf.uri }).catch((error) =>
+        alert(error.message)
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
+    setLoading(true);
     let lineData;
     let mediaDprData;
     let mediaDrgData;
@@ -54,27 +114,43 @@ const Report = ({ navigation }) => {
       mediaDprData = 0;
       mediaDrgData = [];
       navigation.state.params.values.weights.map((weight) => {
-        const calcNew = 1 - weight / reference;
-        const calcNewPgr = (weight - reference) * 2;
+        const wei = unit === 'g' ? weight / 1000 : weight;
+        const calcNew = 1 - wei / reference;
+        const calcNewPgr = (wei - reference) * (wei - reference);
+        setConform(
+          (wei < 300 && calcNew > 10 ? false : true) &&
+            (wei > 300 && calcNew > 7.5 ? false : true)
+        );
         mediaDrgData.push(calcNewPgr);
         mediaDprData += calcNew;
         position += 1;
-        const newLine = [position, weight, calcNew];
+        const newLine = [
+          position,
+          wei,
+          `${Math.abs(Number(calcNew).toFixed(2) * 100)}%`,
+        ];
         lineData.push(newLine);
       });
 
       let value;
       value = 0;
-      mediaDprData.map((med) => (value += med));
-
-      setMediaDrg(mediaDrgData);
-      setMediaDpr(Math.sqrt(value));
+      mediaDrgData.map((med) => (value += med));
+      value = value / navigation.state.params.values.weights.length;
+      setMediaDrg(Math.sqrt(value));
+      setMediaDpr(mediaDprData);
       const min = Math.min(...navigation.state.params.values.weights);
       const max = Math.max(...navigation.state.params.values.weights);
       setBigger(`${max}`);
       setSmall(`${min}`);
     }
     setLine(lineData);
+    setQtMax(
+      Number((Math.max(...arrWeights) * 100) / referenceData).toFixed(2)
+    );
+    setQtMin(
+      Number((Math.min(...arrWeights) * 100) / referenceData).toFixed(2)
+    );
+    setLoading(false);
   }, [navigation.state.params.values.weights]);
 
   const dataTable = {
@@ -82,7 +158,11 @@ const Report = ({ navigation }) => {
     tableData: line,
   };
 
-  return (
+  return loading ? (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator />
+    </View>
+  ) : (
     <Container>
       <Header />
       <Content>
@@ -104,21 +184,26 @@ const Report = ({ navigation }) => {
             <TextBold>Referência: </TextBold>
             <TextValue>
               {referenceData}
-              {unit}
+              mg
             </TextValue>
           </RowFlex>
 
           <RowFlex>
             <TextBold>Média: </TextBold>
             <TextValue>
-              {media}
-              {unit}
+              {Number(media).toFixed(2)}
+              mg
             </TextValue>
           </RowFlex>
           <RowFlex>
             <TextBold>Média DPR: </TextBold>
             <TextValue>
-              {mediaDpr / navigation.state.params.values.weights.length}%
+              {Math.abs(
+                Number(
+                  mediaDpr / navigation.state.params.values.weights.length
+                ).toFixed(2) * 100
+              )}
+              %
             </TextValue>
           </RowFlex>
           <RowFlex>
@@ -129,31 +214,33 @@ const Report = ({ navigation }) => {
             <TextBold>Valor Máximo: </TextBold>
             <TextValue>
               {bigger}
-              {unit}
+              mg
             </TextValue>
           </RowFlex>
           <RowFlex>
             <TextBold>Valor Mínimo: </TextBold>
             <TextValue>
               {small}
-              {unit}
+              mg
+            </TextValue>
+          </RowFlex>
+          {/* <RowFlex>
+            <TextBold>D.G.R: </TextBold>
+            <TextValue>{Number(mediaDrg).toFixed(2)}%</TextValue>
+          </RowFlex> */}
+          <RowFlex>
+            <TextBold>C.V: </TextBold>
+            <TextValue>
+              {Math.abs(Number((mediaDrg * 100) / media).toFixed(2))}%
             </TextValue>
           </RowFlex>
           <RowFlex>
-            <TextBold>P.G.R: </TextBold>
-            <TextValue>{mediaDrg}%</TextValue>
-          </RowFlex>
-          <RowFlex>
-            <TextBold>C.V: </TextBold>
-            <TextValue>+1,2%</TextValue>
-          </RowFlex>
-          <RowFlex>
             <TextBold>Qtmin: </TextBold>
-            <TextValue>+91,2%</TextValue>
+            <TextValue>{Math.abs(qtMin)}%</TextValue>
           </RowFlex>
           <RowFlex>
             <TextBold>Qtmax: </TextBold>
-            <TextValue>+103%</TextValue>
+            <TextValue>{Math.abs(qtMax)}%</TextValue>
           </RowFlex>
           <RowFlex>
             <TextBold>Total de cápsulas: </TextBold>
@@ -163,15 +250,18 @@ const Report = ({ navigation }) => {
             <TextBold>TOTAL: </TextBold>
             <TextValue>
               {valueTotal}
-              {unit}
+              mg
             </TextValue>
           </RowFlex>
         </DescriptionContent>
         <TextBold style={{ marginTop: 24, marginLeft: 20 }}>
-          CONFORME: SIM
+          CONFORME:{' '}
+          {conform && Number((mediaDrg * 100) / media).toFixed(2) < 4
+            ? 'SIM'
+            : 'NÃO'}
         </TextBold>
 
-        <ButtonForm style={{ marginTop: 24 }}>
+        <ButtonForm style={{ marginTop: 24 }} onPress={() => createPDF()}>
           <Text style={{ color: 'white' }}>Imprimir Relatório</Text>
         </ButtonForm>
         <ButtonForm>
