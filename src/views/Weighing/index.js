@@ -44,35 +44,85 @@ const Weighing = ({ navigation }) => {
     const parsedValue = weightContinue;
     if (navigation.state.params.data.farmac === 'americ' && total <= 9) {
       if (parsedValue > 0 && parsedValue >= lastValue) {
-        if (weights.length) {
-          setWeights([...weights, parsedValue - lastValue]);
-          setLestValue(parsedValue);
+        const dpr = 1 - parsedValue / referenceValue;
+        if (parsedValue < 0.3) {
+          if (dpr > 10) {
+            alert('Insira um valor válido');
+            return;
+          }
+          if (weights.length) {
+            setWeights([...weights, parsedValue - lastValue]);
+            setLestValue(parsedValue);
+            setWeightContinue('');
+            setTotal(total + 1);
+          } else {
+            setWeights([...weights, parsedValue]);
+            setLestValue(parsedValue);
+            setWeightContinue('');
+            setTotal(total + 1);
+          }
         } else {
-          setWeights([...weights, parsedValue]);
-          setLestValue(parsedValue);
+          if (dpr > 7.5) {
+            alert('Insira um valor válido');
+            return;
+          }
+          if (weights.length) {
+            setWeights([...weights, parsedValue - lastValue]);
+            setLestValue(parsedValue);
+            setWeightContinue('');
+            setTotal(total + 1);
+          } else {
+            setWeights([...weights, parsedValue]);
+            setLestValue(parsedValue);
+            setWeightContinue('');
+            setTotal(total + 1);
+          }
         }
       } else {
         alert('Insira um valor válido');
       }
-      setWeightContinue('');
-      setTotal(total + 1);
     } else if (
       navigation.state.params.data.farmac === 'brasilian' &&
       total <= 19
     ) {
       if (parsedValue > 0 && parsedValue >= lastValue) {
-        if (weights.length) {
-          setWeights([...weights, parsedValue - lastValue]);
-          setLestValue(parsedValue);
+        const dpr = 1 - parsedValue / referenceValue;
+        if (parsedValue < 0.3) {
+          if (dpr > 10) {
+            alert('Insira um valor válido');
+            return;
+          }
+          if (weights.length) {
+            setWeights([...weights, parsedValue - lastValue]);
+            setLestValue(parsedValue);
+            setWeightContinue('');
+            setTotal(total + 1);
+          } else {
+            setWeights([...weights, parsedValue]);
+            setLestValue(parsedValue);
+            setWeightContinue('');
+            setTotal(total + 1);
+          }
         } else {
-          setWeights([...weights, parsedValue]);
-          setLestValue(parsedValue);
+          if (dpr > 7.5) {
+            alert('Insira um valor válido');
+            return;
+          }
+          if (weights.length) {
+            setWeights([...weights, parsedValue - lastValue]);
+            setLestValue(parsedValue);
+            setWeightContinue('');
+            setTotal(total + 1);
+          } else {
+            setWeights([...weights, parsedValue]);
+            setLestValue(parsedValue);
+            setWeightContinue('');
+            setTotal(total + 1);
+          }
         }
       } else {
         alert('Insira um valor válido');
       }
-      setWeightContinue('');
-      setTotal(total + 1);
     }
   }, [weightContinue, weights]);
 
@@ -131,6 +181,7 @@ const Weighing = ({ navigation }) => {
               valueReference: referenceValue,
               weights,
               farmac: navigation.state.params.data.farmac,
+              data: navigation.state.params.data,
             });
           }}
         >
