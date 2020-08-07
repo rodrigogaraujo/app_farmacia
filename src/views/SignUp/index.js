@@ -19,7 +19,10 @@ const SignUp = ({ navigation }) => {
     firabase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(navigation.navigate('SignUp'))
+      .then(() => {
+        setLoading(false);
+        navigation.navigate('SignUp');
+      })
       .catch(function (error) {
         alert(error);
         setLoading(false);

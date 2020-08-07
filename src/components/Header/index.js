@@ -25,7 +25,6 @@ const Header = () => {
       <Image style={{ width: 40, height: 40 }} source={logo} />
       <HeaderProfile>
         <Text style={{ color: 'white', fontSize: 13 }}>Operador: {mail}</Text>
-        <Text style={{ color: 'white', fontSize: 13 }}>Local</Text>
       </HeaderProfile>
     </Container>
   );

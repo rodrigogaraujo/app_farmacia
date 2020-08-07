@@ -81,18 +81,6 @@ const ServiceOrder = ({ navigation }) => {
               </Picker>
             </InputFormSelect>
           </Column>
-          <Column>
-            <TextForm>Unidade</TextForm>
-            <InputFormSelect>
-              <Picker
-                selectedValue={unit}
-                style={{ height: 50, width: 150 }}
-                onValueChange={(itemValue, itemIndex) => setUnit(itemValue)}
-              >
-                <Picker.Item label="Grama" value="g" />
-              </Picker>
-            </InputFormSelect>
-          </Column>
           <Row>
             <ButtonForm>
               <Text style={{ color: 'white' }}>Salvar</Text>

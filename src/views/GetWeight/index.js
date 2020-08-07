@@ -15,7 +15,7 @@ export const GetWeight = ({ navigation }) => {
     if (navigation.state.params.weights) {
       let value = 0;
       navigation.state.params.weights.map(
-        (weight) => (value += parseInt(weight))
+        (weight) => (value += parseFloat(weight))
       );
       setValueTotal(`${value}`);
     }

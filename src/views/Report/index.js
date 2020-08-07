@@ -46,27 +46,30 @@ const Report = ({ navigation }) => {
     try {
       let position = 0;
       let arrTable = [];
+      var html = '';
       navigation.state.params.values.weights.map((weight) => {
-        const wei = unit === 'g' ? weight / 1000 : weight;
+        const wei = weight;
         const calcNew = 1 - wei / parseInt(referenceData);
         position += 1;
         arrTable.push(position, wei, `${Number(calcNew).toFixed(2) * 100}%`);
       });
-      console.log(arrTable);
-      let html = `<h1>ORDEM DE SERVIÇO</h1><br/>
+      html += `<h1>ORDEM DE SERVIÇO</h1><br/>
         <h2>Ordem de Serviço n.: 001</h2>
         <br/><h2>Manipulador: Farmacêutico</h2><br/>
         ${moment(new Date()).format('DD/MM/YYYY')};
-        ${moment(new Date()).format('hh:mm')}<br/>
-        <table><tr><th>Cápsula</th><th>Peso</th><th>DPR</th></tr>
-        ${arrTable.map((arr) => (
-          <tr key={arr[0]}>
-            <td>{arr[0]}</td>
-            <td>{arr[1]}</td>
-            <td>{arr[2]}</td>
-          </tr>
-        ))}
-        </table><br />
+        ${moment(new Date()).format('hh:mm')}<br/>`;
+      console.log('aqui1', html);
+      arrTable.map((arr) => {
+        console.log(arr);
+        if (arr[0] >= 1)
+          html += `<p>
+            <span>Cápsula: ${arr[0]} - </span>
+            <span>Peso: ${arr[1] ? Math.abs(arr[2]) : '0'} - </span>
+            <span>DPR: ${arr[2] ? Math.abs(arr[2]) : '0'}</span>
+          </p>`;
+      });
+      console.log('aqui2', html);
+      html += `<br />
         <p>Referencia: ${referenceData}</p><br />
         <p>Média: ${Number(media).toFixed(2)}g</p><br />
         <p>Média DPR: ${Number(
@@ -83,8 +86,8 @@ const Report = ({ navigation }) => {
             ? 'SIM'
             : 'NÃO'
         }</p>`;
+      console.log('aqui3', html);
       // console.log(file.filePath);
-      console.log(html);
       const pdf = await Print.printToFileAsync({ html });
 
       return Print.printAsync({ uri: pdf.uri }).catch((error) =>
@@ -116,7 +119,7 @@ const Report = ({ navigation }) => {
       mediaDprData = 0;
       mediaDrgData = [];
       navigation.state.params.values.weights.map((weight) => {
-        const wei = unit === 'g' ? weight / 1000 : weight;
+        const wei = weight;
         const calcNew = 1 - wei / reference;
         const calcNewPgr = (wei - reference) * (wei - reference);
         setConform(
@@ -128,7 +131,7 @@ const Report = ({ navigation }) => {
         position += 1;
         const newLine = [
           position,
-          wei,
+          Number(wei).toFixed(2),
           `${Math.abs(Number(calcNew).toFixed(2) * 100)}%`,
         ];
         lineData.push(newLine);

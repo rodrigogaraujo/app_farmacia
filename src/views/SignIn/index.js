@@ -51,7 +51,10 @@ const SignIn = ({ navigation }) => {
         } else {
           setLoading(false);
         }
-      } catch (error) {}
+      } catch (error) {
+        setLoading(false);
+        setPassword('');
+      }
     }
     getMail();
   }, []);

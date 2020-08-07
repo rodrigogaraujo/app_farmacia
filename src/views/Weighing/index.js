@@ -36,12 +36,12 @@ const Weighing = ({ navigation }) => {
   const [lastValue, setLestValue] = useState(0);
   useEffect(() => {
     navigation.state.params.data.farmac === 'americ'
-      ? setWeightSize(10)
-      : setWeightSize(20);
+      ? setWeightSize(20)
+      : setWeightSize(10);
   }, [navigation.state.params.data.farmac]);
 
   const handleNext = useCallback(() => {
-    const parsedValue = parseInt(weightContinue);
+    const parsedValue = weightContinue;
     if (navigation.state.params.data.farmac === 'americ' && total <= 9) {
       if (parsedValue > 0 && parsedValue >= lastValue) {
         if (weights.length) {
