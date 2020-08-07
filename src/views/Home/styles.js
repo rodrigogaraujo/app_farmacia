@@ -18,7 +18,11 @@ export const HeaderProfile = styled.View`
   margin-left: 10px;
 `;
 
-export const Content = styled.ScrollView``;
+export const Content = styled.View`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
 
 export const ButtonOption = styled.TouchableOpacity`
   width: 90%;

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Text, ActivityIndicator, View } from 'react-native';
 import { Table, Row, Rows } from 'react-native-table-component';
 import moment from 'moment';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import * as Print from 'expo-print';
 
 import {
@@ -45,26 +44,28 @@ const Report = ({ navigation }) => {
 
   const createPDF = async () => {
     try {
-      const table = navigation.state.params.values.weights.map((weight) => {
+      let position = 0;
+      let arrTable = [];
+      navigation.state.params.values.weights.map((weight) => {
         const wei = unit === 'g' ? weight / 1000 : weight;
         const calcNew = 1 - wei / parseInt(referenceData);
         position += 1;
-        return (
-          <tr>
-            <td>{position}</td>
-            <td>{wei}</td>
-            <td>`${Number(calcNew).toFixed(2) * 100}%`</td>
-          </tr>
-        );
+        arrTable.push(position, wei, `${Number(calcNew).toFixed(2) * 100}%`);
       });
-      let position = 0;
+      console.log(arrTable);
       let html = `<h1>ORDEM DE SERVIÇO</h1><br/>
         <h2>Ordem de Serviço n.: 001</h2>
         <br/><h2>Manipulador: Farmacêutico</h2><br/>
         ${moment(new Date()).format('DD/MM/YYYY')};
         ${moment(new Date()).format('hh:mm')}<br/>
         <table><tr><th>Cápsula</th><th>Peso</th><th>DPR</th></tr>
-        ${table}
+        ${arrTable.map((arr) => (
+          <tr key={arr[0]}>
+            <td>{arr[0]}</td>
+            <td>{arr[1]}</td>
+            <td>{arr[2]}</td>
+          </tr>
+        ))}
         </table><br />
         <p>Referencia: ${referenceData}</p><br />
         <p>Média: ${Number(media).toFixed(2)}g</p><br />
@@ -83,6 +84,7 @@ const Report = ({ navigation }) => {
             : 'NÃO'
         }</p>`;
       // console.log(file.filePath);
+      console.log(html);
       const pdf = await Print.printToFileAsync({ html });
 
       return Print.printAsync({ uri: pdf.uri }).catch((error) =>

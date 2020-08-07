@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Image } from 'react-native';
 import { Text } from 'react-native';
+
+import logo from '../../assets/logo.png';
 
 import { Container, HeaderProfile } from './styles';
 
@@ -20,7 +22,7 @@ const Header = () => {
 
   return (
     <Container>
-      <Text style={{ color: 'white', fontSize: 28 }}>Logo</Text>
+      <Image style={{ width: 40, height: 40 }} source={logo} />
       <HeaderProfile>
         <Text style={{ color: 'white', fontSize: 13 }}>Operador: {mail}</Text>
         <Text style={{ color: 'white', fontSize: 13 }}>Local</Text>

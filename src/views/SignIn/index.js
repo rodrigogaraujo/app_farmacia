@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Text, TouchableOpacity, ActivityIndicator, View } from 'react-native';
+import {
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  View,
+  Image,
+} from 'react-native';
 import firabase from '../../config/firabase';
 import { AsyncStorage } from 'react-native';
 
+import logo from '../../assets/logo.svg';
 import {
   ContainerSignIn,
   Row,
@@ -55,6 +62,7 @@ const SignIn = ({ navigation }) => {
     </View>
   ) : (
     <ContainerSignIn>
+      <Image style={{ width: 40, height: 40 }} source={logo} />
       <Text>Fazer Log-In</Text>
       <Row>
         <TextForm>Login</TextForm>

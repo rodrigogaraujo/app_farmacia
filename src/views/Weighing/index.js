@@ -1,7 +1,8 @@
 import React, { useCallback, useRef, useState, useEffect } from 'react';
-import { Text, Picker } from 'react-native';
+import { Text, Image } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import moment from 'moment';
+import SvgUri from 'react-native-svg-uri';
 
 import {
   Container,
@@ -12,13 +13,12 @@ import {
   Content,
   ButtonForm,
   Column,
-  InputFormSelect,
   TextOs,
   ContentContainer,
   TextValue,
 } from './styles';
 
-import Input from '../../components/Input';
+import logo from '../../assets/logo.png';
 import Header from '../../components/Header';
 
 const Weighing = ({ navigation }) => {
@@ -116,7 +116,7 @@ const Weighing = ({ navigation }) => {
           <ButtonForm style={{ marginLeft: 20 }} onPress={handlePrev}>
             <AntDesign name="caretleft" size={24} color="white" />
           </ButtonForm>
-          <Text style={{ marginLeft: 10, fontSize: 20 }}>Logo</Text>
+          <Image style={{ width: 60, height: 60 }} source={logo} />
           <TextValue>{total <= 9 ? total + 1 : 10}</TextValue>
           <ButtonForm style={{ marginLeft: 20 }} onPress={handleNext}>
             <AntDesign name="caretright" size={24} color="white" />

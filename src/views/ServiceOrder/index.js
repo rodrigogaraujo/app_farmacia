@@ -7,7 +7,6 @@ import {
   Container,
   Title,
   Row,
-  InputForm,
   TextForm,
   Content,
   ButtonForm,
@@ -58,8 +57,8 @@ const ServiceOrder = ({ navigation }) => {
             <Input placeholder="Operador" name="operator" />
           </Column>
           <Column>
-            <TextForm>Capsula</TextForm>
-            <Input placeholder="Capsula" name="capsule" />
+            <TextForm>Cápsula</TextForm>
+            <Input placeholder="Cápsula" name="capsule" />
           </Column>
           <Column>
             <TextForm>Valor de Referência</TextForm>
@@ -91,8 +90,6 @@ const ServiceOrder = ({ navigation }) => {
                 onValueChange={(itemValue, itemIndex) => setUnit(itemValue)}
               >
                 <Picker.Item label="Grama" value="g" />
-                <Picker.Item label="Miligrama" value="mg" />
-                <Picker.Item label="Mililitro" value="ml" />
               </Picker>
             </InputFormSelect>
           </Column>
