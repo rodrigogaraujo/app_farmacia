@@ -155,7 +155,7 @@ const Report = ({ navigation }) => {
         const newLine = [
           position,
           Number(wei).toFixed(3),
-          `${Math.abs(Number(calcNew).toFixed(3) * 100)}%`,
+          `${Math.abs(Number(calcNew * 100)).toFixed(3)}%`,
         ];
         lineData.push(newLine);
       });
@@ -227,8 +227,9 @@ const Report = ({ navigation }) => {
             <TextValue>
               {Math.abs(
                 Number(
-                  mediaDpr / navigation.state.params.values.weights.length
-                ).toFixed(3) * 100
+                  (mediaDpr / navigation.state.params.values.weights.length) *
+                    100
+                ).toFixed(3)
               )}
               %
             </TextValue>
@@ -239,11 +240,11 @@ const Report = ({ navigation }) => {
           </RowFlex>
           <RowFlex>
             <TextBold>Valor Máximo: </TextBold>
-            <TextValue>{bigger}g</TextValue>
+            <TextValue>{Number(bigger).toFixed(3)}g</TextValue>
           </RowFlex>
           <RowFlex>
             <TextBold>Valor Mínimo: </TextBold>
-            <TextValue>{small}g</TextValue>
+            <TextValue>{Number(small).toFixed(3)}g</TextValue>
           </RowFlex>
           {/* <RowFlex>
             <TextBold>D.G.R: </TextBold>
