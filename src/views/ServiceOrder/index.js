@@ -18,7 +18,7 @@ import Header from '../../components/Header';
 
 const ServiceOrder = ({ navigation }) => {
   const formRef = useRef(null);
-  const [farmac, setFarmac] = useState('americ');
+  const [farmac, setFarmac] = useState('brasilian');
   const [unit, setUnit] = useState('g');
 
   const handleSubmit = useCallback(
